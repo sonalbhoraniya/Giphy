@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     function buttonCreation() {
 
-        $("#buttons-view").empty(); 
+        $("#buttons-view").empty();
 
         for (var i = 0; i < topics.length; i++) {
             var gifButton = $("<button>");
@@ -16,37 +16,53 @@ $(document).ready(function () {
         }
 
     }
+    buttonCreation();
 
     $("#add-movie").on("click", function (event) {
         event.preventDefault();
         var movie = $("#movie-input").val().trim();
-        topics.push(movie); 
+        // topics.push(movie);
+        // console.log(movie); 
+        // buttonCreation();
+        var gifB = $("<button>");
+            gifB.addClass("movie");
+            gifB.attr("movie-name", movie);
+            gifB.text(movie);
+            $("#buttons-view").append(gifB);
 
-        buttonCreation();
     });
 
-    buttonCreation();
+})
 
-    $("button").on("click", function(){
+//     $("button").on("click", function () {
+
         
-        var disney = $(this).attr("movie-name");
 
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + disney + "&api_key=Pj78Bz6fTLsQVlcVRKrDgmCdb1GfHTKi&limit=10";
+// })
 
-        $.ajax({
-            url: queryURL, 
-            method: "GET"
-        })
-
-        .then(function(response) {
-            
-            console.log(queryURL); 
-            console.log(response); 
-
-            var results = response.data; 
+$(document).on("click", "button", function(event) {
 
 
-            for (var i=0; i< results.length; i++) {
+    $("#gifs-appear-here").empty();
+
+    var disney = $(this).attr("movie-name");
+
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + disney + "&api_key=Pj78Bz6fTLsQVlcVRKrDgmCdb1GfHTKi&limit=10";
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+
+        .then(function (response) {
+
+            console.log(queryURL);
+            console.log(response);
+
+            var results = response.data;
+
+
+            for (var i = 0; i < results.length; i++) {
 
                 console.log(results[i].images.fixed_height_small_still.url);
 
@@ -62,17 +78,17 @@ $(document).ready(function () {
 
                 movieImage.attr("src", results[i].images.fixed_height_small_still.url);
 
-                movieDiv.append(p); 
-                movieDiv.append(movieImage); 
+                movieDiv.append(p);
+                movieDiv.append(movieImage);
 
-                $("#gifs-appear-here").prepend(movieDiv); 
+                $("#gifs-appear-here").prepend(movieDiv);
 
             }
 
-            $(".gif").on("click", function() {
-        
+            $(".gif").on("click", function () {
+
                 var state = $(this).attr("data-state");
-        
+
                 if (state === "still") {
                     $(this).attr("src", $(this).attr("data-animate"));
                     $(this).attr("data-state", "animate");
@@ -82,10 +98,5 @@ $(document).ready(function () {
                 }
             })
         })
-
-       
-    })
-
-    
 
 })
